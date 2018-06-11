@@ -18,10 +18,14 @@ def add_user():
         "fingerprint",
     ]
 
-    output = {
-        data: json.dumps(request_json[data], sort_keys=True, indent=4)
-        for data in data_sources
-    }
+    # Create output dictionary. Google sometimes won't render fingerprint, so
+    # need to catch missing
+    output = {}
+    for data in data_sources:
+        try:
+            output[data] = json.dumps(request_json[data], sort_keys=True, indent=4)
+        except KeyError:
+            continue
 
     output["headers"] = dict(request.headers)
 
